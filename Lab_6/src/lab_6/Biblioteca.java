@@ -22,10 +22,10 @@ public class Biblioteca extends JFrame {
     private JPanel gamePanel;
     private int playerId;
     
-    private final Color BACKGROUND_COLOR = new Color(27, 40, 56);
-    private final Color CARD_COLOR = new Color(42, 71, 94);
-    private final Color TEXT_COLOR = new Color(195, 213, 220);
-    private final Color BUTTON_COLOR = new Color(59, 133, 224);
+    private final Color BACKGROUND_COLOR = SteamStyle.STEAM_DARK;
+    private final Color CARD_COLOR = SteamStyle.STEAM_GRAY;
+    private final Color TEXT_COLOR = SteamStyle.STEAM_TEXT;
+    private final Color BUTTON_COLOR = SteamStyle.STEAM_BLUE;
     
     public Biblioteca(Steam steam, int playerId) {
         this.steam = steam;
@@ -36,25 +36,33 @@ public class Biblioteca extends JFrame {
     
     private void setupFrame() {
         setTitle("Steam - Biblioteca de Juegos");
-        setSize(800, 600);
+        setSize(900, 700);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(BACKGROUND_COLOR);
+        JPanel mainPanel = SteamStyle.createSteamPanel();
+        mainPanel.setLayout(new BorderLayout());
         
         JPanel headerPanel = createHeaderPanel();
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         
         gamePanel = new JPanel();
         gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
-        gamePanel.setBackground(BACKGROUND_COLOR);
-        gamePanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        gamePanel.setOpaque(false);
+        gamePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         JScrollPane scrollPane = new JScrollPane(gamePanel);
-        scrollPane.setBackground(BACKGROUND_COLOR);
-        scrollPane.getViewport().setBackground(BACKGROUND_COLOR);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = SteamStyle.STEAM_GRAY;
+                this.trackColor = SteamStyle.STEAM_DARKER;
+            }
+        });
         
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         add(mainPanel);
@@ -62,18 +70,17 @@ public class Biblioteca extends JFrame {
     
     private JPanel createHeaderPanel() {
         JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(new Color(23, 26, 33));
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        headerPanel.setOpaque(false);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
         
         JLabel titleLabel = new JLabel("MI BIBLIOTECA");
-        titleLabel.setForeground(TEXT_COLOR);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setForeground(SteamStyle.STEAM_LIGHT_BLUE);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         headerPanel.add(titleLabel, BorderLayout.WEST);
         
         JButton returnButton = new JButton("Regresar al Menú");
-        returnButton.setBackground(CARD_COLOR);
-        returnButton.setForeground(Color.WHITE);
-        returnButton.setFocusPainted(false);
+        SteamStyle.styleSecondaryButton(returnButton);
+        returnButton.setPreferredSize(new Dimension(160, 38));
         returnButton.addActionListener(e -> dispose());
         headerPanel.add(returnButton, BorderLayout.EAST);
         
@@ -174,10 +181,13 @@ public class Biblioteca extends JFrame {
     }
     
     private void addGameCard(Steam.Juego game) {
-        JPanel cardPanel = new JPanel(new BorderLayout(5, 0));
+        JPanel cardPanel = new JPanel(new BorderLayout(10, 0));
         cardPanel.setBackground(CARD_COLOR);
-        cardPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        cardPanel.setMaximumSize(new Dimension(750, 100));
+        cardPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(60, 80, 100), 1),
+            BorderFactory.createEmptyBorder(12, 12, 12, 12)
+        ));
+        cardPanel.setMaximumSize(new Dimension(850, 110));
         
         
         JLabel imageLabel = createImageLabel(game);
@@ -220,17 +230,16 @@ public class Biblioteca extends JFrame {
         
        
         JLabel nameLabel = new JLabel(game.titulo);
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 17));
         nameLabel.setForeground(TEXT_COLOR);
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         infoPanel.add(nameLabel);
-        infoPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        infoPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         
-   
         String osName = getOSName(game.sistemaOperativo);
         JLabel osLabel = new JLabel("Sistema: " + osName);
-        osLabel.setForeground(new Color(170, 170, 170));
-        osLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        osLabel.setForeground(SteamStyle.STEAM_TEXT_DARK);
+        osLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         osLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         infoPanel.add(osLabel);
         
@@ -259,22 +268,35 @@ public class Biblioteca extends JFrame {
     
     private ImageIcon loadGameImage(Steam.Juego game) {
         try {
-            if (game.rutaImagen.startsWith("/images/")) {
-                ImageIcon icon = new ImageIcon(getClass().getResource(game.rutaImagen));
+            if (game.rutaImagen == null || game.rutaImagen.trim().isEmpty()) {
+                return null;
+            }
+            
+            String imagePath = game.rutaImagen;
+            java.net.URL imgURL = null;
+            
+            if (imagePath.startsWith("/images/") || imagePath.startsWith("/Images/")) {
+                imgURL = getClass().getResource(imagePath);
+                if (imgURL == null) {
+                    String correctedPath = imagePath.replace("/images/", "/Images/").replace("/Images/", "/Images/");
+                    imgURL = getClass().getResource(correctedPath);
+                }
+            }
+            
+            if (imgURL == null) {
+                String fileName = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+                File imgFile = new File("src/Images/" + fileName);
+                if (imgFile.exists()) {
+                    imgURL = imgFile.toURI().toURL();
+                }
+            }
+            
+            if (imgURL != null) {
+                ImageIcon icon = new ImageIcon(imgURL);
                 Image img = icon.getImage();
                 if (img != null && img.getWidth(null) > 0) {
                     Image scaledImg = img.getScaledInstance(184, 69, Image.SCALE_SMOOTH);
                     return new ImageIcon(scaledImg);
-                }
-            } else {
-                File imageFile = new File(game.rutaImagen);
-                if (imageFile.exists()) {
-                    ImageIcon icon = new ImageIcon(game.rutaImagen);
-                    Image img = icon.getImage();
-                    if (img != null && img.getWidth(null) > 0) {
-                        Image scaledImg = img.getScaledInstance(184, 69, Image.SCALE_SMOOTH);
-                        return new ImageIcon(scaledImg);
-                    }
                 }
             }
         } catch (Exception e) {

@@ -1,13 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package lab_6;
-
-/**
- *
- * @author mavasquez
- */
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +15,6 @@ public class LoginFrame extends JFrame {
     private JPanel mainPanel;
     private JPanel loginPanel;
     private JPanel registerPanel;
-    
     private Steam steam;
     
     public LoginFrame(Steam steam) {
@@ -32,7 +22,8 @@ public class LoginFrame extends JFrame {
         this.steam = steam;
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 500);
+        setSize(750, 700);
+        setResizable(false);
         getContentPane().setBackground(SteamStyle.STEAM_DARK);
         
         cardLayout = new CardLayout();
@@ -51,86 +42,91 @@ public class LoginFrame extends JFrame {
     
     private JPanel createLoginPanel() {
         JPanel panel = SteamStyle.createSteamPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
         
-        JLabel titleLabel = new JLabel("STEAM", SwingConstants.CENTER);
-        SteamStyle.styleTitleLabel(titleLabel);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(titleLabel);
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        gbc.insets = new Insets(10, 0, 10, 0);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
         
+        JLabel logoLabel = new JLabel("STEAM", SwingConstants.CENTER);
+        SteamStyle.styleTitleLabel(logoLabel);
+        logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        panel.add(logoLabel, gbc);
+        
+        gbc.gridy = 1;
         JLabel subtitleLabel = new JLabel("Iniciar Sesión", SwingConstants.CENTER);
-        subtitleLabel.setForeground(SteamStyle.STEAM_TEXT_DARK);
-        subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(subtitleLabel);
-        panel.add(Box.createRigidArea(new Dimension(0, 40)));
+        SteamStyle.styleSubtitleLabel(subtitleLabel);
+        subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        panel.add(subtitleLabel, gbc);
+        
+        gbc.gridy = 2;
+        gbc.insets = new Insets(50, 0, 0, 0);
+        panel.add(Box.createRigidArea(new Dimension(0, 0)), gbc);
         
         JPanel formPanel = new JPanel();
-        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setLayout(new GridBagLayout());
         formPanel.setOpaque(false);
-        formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.setMaximumSize(new Dimension(350, Integer.MAX_VALUE));
+        GridBagConstraints fgbc = new GridBagConstraints();
+        fgbc.insets = new Insets(8, 0, 8, 0);
+        fgbc.fill = GridBagConstraints.HORIZONTAL;
+        fgbc.gridx = 0;
+        fgbc.weightx = 1.0;
         
+        fgbc.gridy = 0;
         JLabel userLabel = new JLabel("Nombre de Usuario");
         SteamStyle.styleLabel(userLabel);
-        formPanel.add(userLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        userLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        formPanel.add(userLabel, fgbc);
         
+        fgbc.gridy = 1;
+        fgbc.insets = new Insets(0, 0, 20, 0);
         JTextField userField = new JTextField(20);
         SteamStyle.styleTextField(userField);
-        formPanel.add(userField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        userField.setPreferredSize(new Dimension(450, 42));
+        formPanel.add(userField, fgbc);
         
+        fgbc.gridy = 2;
+        fgbc.insets = new Insets(0, 0, 8, 0);
         JLabel passLabel = new JLabel("Contraseña");
         SteamStyle.styleLabel(passLabel);
-        formPanel.add(passLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        passLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        formPanel.add(passLabel, fgbc);
         
+        fgbc.gridy = 3;
+        fgbc.insets = new Insets(0, 0, 30, 0);
         JPasswordField passField = new JPasswordField(20);
         SteamStyle.stylePasswordField(passField);
-        formPanel.add(passField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        passField.setPreferredSize(new Dimension(450, 42));
+        formPanel.add(passField, fgbc);
         
+        fgbc.gridy = 4;
+        fgbc.insets = new Insets(0, 0, 12, 0);
         JButton loginButton = new JButton("Iniciar Sesión");
         SteamStyle.styleButton(loginButton);
-        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginButton.setPreferredSize(new Dimension(350, 40));
-        loginButton.setMaximumSize(new Dimension(350, 40));
-        formPanel.add(loginButton);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        loginButton.setPreferredSize(new Dimension(450, 48));
+        formPanel.add(loginButton, fgbc);
         
+        fgbc.gridy = 5;
+        fgbc.insets = new Insets(0, 0, 12, 0);
         JButton createAccountButton = new JButton("Crear Nueva Cuenta");
-        createAccountButton.setBackground(SteamStyle.STEAM_GRAY);
-        createAccountButton.setForeground(SteamStyle.STEAM_TEXT);
-        createAccountButton.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        createAccountButton.setFocusPainted(false);
-        createAccountButton.setBorderPainted(false);
-        createAccountButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        createAccountButton.setOpaque(true);
-        createAccountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        createAccountButton.setPreferredSize(new Dimension(350, 35));
-        createAccountButton.setMaximumSize(new Dimension(350, 35));
+        SteamStyle.styleSecondaryButton(createAccountButton);
+        createAccountButton.setPreferredSize(new Dimension(450, 42));
+        formPanel.add(createAccountButton, fgbc);
         
-        createAccountButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                createAccountButton.setBackground(SteamStyle.STEAM_GRAY.brighter());
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                createAccountButton.setBackground(SteamStyle.STEAM_GRAY);
-            }
-        });
-        
-        formPanel.add(createAccountButton);
-        
+        fgbc.gridy = 6;
+        fgbc.insets = new Insets(0, 0, 0, 0);
         JLabel messageLabel = new JLabel("", SwingConstants.CENTER);
-        messageLabel.setForeground(new Color(255, 100, 100));
-        messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-        formPanel.add(messageLabel);
+        messageLabel.setForeground(SteamStyle.STEAM_RED);
+        messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        messageLabel.setPreferredSize(new Dimension(450, 20));
+        formPanel.add(messageLabel, fgbc);
         
-        panel.add(formPanel);
+        gbc.gridy = 3;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        panel.add(formPanel, gbc);
         
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -152,7 +148,7 @@ public class LoginFrame extends JFrame {
                     
                     if (found) {
                         messageLabel.setText("Bienvenido " + currentUser.nombre);
-                        messageLabel.setForeground(new Color(100, 255, 100));
+                        messageLabel.setForeground(SteamStyle.STEAM_GREEN);
                         dispose();
                         
                         if (currentUser.tipoUsuario.equalsIgnoreCase("admin")) {
@@ -162,11 +158,11 @@ public class LoginFrame extends JFrame {
                         }
                     } else {
                         messageLabel.setText("Credenciales incorrectas");
-                        messageLabel.setForeground(new Color(255, 100, 100));
+                        messageLabel.setForeground(SteamStyle.STEAM_RED);
                     }
                 } catch (IOException ex) {
                     messageLabel.setText("Error en lectura de datos");
-                    messageLabel.setForeground(new Color(255, 100, 100));
+                    messageLabel.setForeground(SteamStyle.STEAM_RED);
                     ex.printStackTrace();
                 }
             }
@@ -183,99 +179,113 @@ public class LoginFrame extends JFrame {
     
     private JPanel createRegisterPanel() {
         JPanel panel = SteamStyle.createSteamPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        
+        gbc.insets = new Insets(10, 0, 10, 0);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
         
         JLabel titleLabel = new JLabel("CREAR CUENTA", SwingConstants.CENTER);
         SteamStyle.styleTitleLabel(titleLabel);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(titleLabel);
-        panel.add(Box.createRigidArea(new Dimension(0, 30)));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        panel.add(titleLabel, gbc);
+        
+        gbc.gridy = 1;
+        gbc.insets = new Insets(30, 0, 0, 0);
+        panel.add(Box.createRigidArea(new Dimension(0, 0)), gbc);
         
         JPanel formPanel = new JPanel();
-        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setLayout(new GridBagLayout());
         formPanel.setOpaque(false);
-        formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.setMaximumSize(new Dimension(350, Integer.MAX_VALUE));
+        GridBagConstraints fgbc = new GridBagConstraints();
+        fgbc.insets = new Insets(8, 0, 8, 0);
+        fgbc.fill = GridBagConstraints.HORIZONTAL;
+        fgbc.gridx = 0;
+        fgbc.weightx = 1.0;
         
+        fgbc.gridy = 0;
         JLabel userLabel = new JLabel("Nombre de Usuario");
         SteamStyle.styleLabel(userLabel);
-        formPanel.add(userLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        userLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        formPanel.add(userLabel, fgbc);
         
+        fgbc.gridy = 1;
+        fgbc.insets = new Insets(0, 0, 15, 0);
         JTextField userField = new JTextField(20);
         SteamStyle.styleTextField(userField);
-        formPanel.add(userField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        userField.setPreferredSize(new Dimension(450, 42));
+        formPanel.add(userField, fgbc);
         
+        fgbc.gridy = 2;
+        fgbc.insets = new Insets(0, 0, 8, 0);
         JLabel passLabel = new JLabel("Contraseña");
         SteamStyle.styleLabel(passLabel);
-        formPanel.add(passLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        passLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        formPanel.add(passLabel, fgbc);
         
+        fgbc.gridy = 3;
+        fgbc.insets = new Insets(0, 0, 15, 0);
         JPasswordField passField = new JPasswordField(20);
         SteamStyle.stylePasswordField(passField);
-        formPanel.add(passField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        passField.setPreferredSize(new Dimension(450, 42));
+        formPanel.add(passField, fgbc);
         
+        fgbc.gridy = 4;
+        fgbc.insets = new Insets(0, 0, 8, 0);
         JLabel nameLabel = new JLabel("Nombre Completo");
         SteamStyle.styleLabel(nameLabel);
-        formPanel.add(nameLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        formPanel.add(nameLabel, fgbc);
         
+        fgbc.gridy = 5;
+        fgbc.insets = new Insets(0, 0, 15, 0);
         JTextField nameField = new JTextField(20);
         SteamStyle.styleTextField(nameField);
-        formPanel.add(nameField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        nameField.setPreferredSize(new Dimension(450, 42));
+        formPanel.add(nameField, fgbc);
         
+        fgbc.gridy = 6;
+        fgbc.insets = new Insets(0, 0, 8, 0);
         JLabel dateLabel = new JLabel("Fecha de Nacimiento (dd/MM/yyyy)");
         SteamStyle.styleLabel(dateLabel);
-        formPanel.add(dateLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        dateLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        formPanel.add(dateLabel, fgbc);
         
+        fgbc.gridy = 7;
+        fgbc.insets = new Insets(0, 0, 25, 0);
         JTextField dateField = new JTextField(20);
         SteamStyle.styleTextField(dateField);
-        formPanel.add(dateField);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        dateField.setPreferredSize(new Dimension(450, 42));
+        formPanel.add(dateField, fgbc);
         
+        fgbc.gridy = 8;
+        fgbc.insets = new Insets(0, 0, 12, 0);
         JButton registerButton = new JButton("Crear Cuenta");
         SteamStyle.styleButton(registerButton);
-        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        registerButton.setPreferredSize(new Dimension(350, 40));
-        registerButton.setMaximumSize(new Dimension(350, 40));
-        formPanel.add(registerButton);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        registerButton.setPreferredSize(new Dimension(450, 48));
+        formPanel.add(registerButton, fgbc);
         
+        fgbc.gridy = 9;
+        fgbc.insets = new Insets(0, 0, 12, 0);
         JButton backButton = new JButton("Volver al Login");
-        backButton.setBackground(SteamStyle.STEAM_GRAY);
-        backButton.setForeground(SteamStyle.STEAM_TEXT);
-        backButton.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        backButton.setFocusPainted(false);
-        backButton.setBorderPainted(false);
-        backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        backButton.setOpaque(true);
-        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        backButton.setPreferredSize(new Dimension(350, 35));
-        backButton.setMaximumSize(new Dimension(350, 35));
+        SteamStyle.styleSecondaryButton(backButton);
+        backButton.setPreferredSize(new Dimension(450, 42));
+        formPanel.add(backButton, fgbc);
         
-        backButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                backButton.setBackground(SteamStyle.STEAM_GRAY.brighter());
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                backButton.setBackground(SteamStyle.STEAM_GRAY);
-            }
-        });
-        
-        formPanel.add(backButton);
-        
+        fgbc.gridy = 10;
+        fgbc.insets = new Insets(0, 0, 0, 0);
         JLabel messageLabel = new JLabel("", SwingConstants.CENTER);
-        messageLabel.setForeground(new Color(100, 255, 100));
-        messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-        formPanel.add(messageLabel);
+        messageLabel.setForeground(SteamStyle.STEAM_GREEN);
+        messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        messageLabel.setPreferredSize(new Dimension(450, 20));
+        formPanel.add(messageLabel, fgbc);
         
-        panel.add(formPanel);
+        gbc.gridy = 2;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        panel.add(formPanel, gbc);
         
         registerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -292,7 +302,7 @@ public class LoginFrame extends JFrame {
                     
                     steam.addPlayer(username, password, name, cal, "", "normal");
                     messageLabel.setText("Cuenta creada exitosamente");
-                    messageLabel.setForeground(new Color(100, 255, 100));
+                    messageLabel.setForeground(SteamStyle.STEAM_GREEN);
                     
                     userField.setText("");
                     passField.setText("");
@@ -309,10 +319,10 @@ public class LoginFrame extends JFrame {
                     
                 } catch (ParseException pe) {
                     messageLabel.setText("Formato de fecha incorrecto");
-                    messageLabel.setForeground(new Color(255, 100, 100));
+                    messageLabel.setForeground(SteamStyle.STEAM_RED);
                 } catch (IOException ex) {
                     messageLabel.setText("Error al crear cuenta");
-                    messageLabel.setForeground(new Color(255, 100, 100));
+                    messageLabel.setForeground(SteamStyle.STEAM_RED);
                     ex.printStackTrace();
                 }
             }

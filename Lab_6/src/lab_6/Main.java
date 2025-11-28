@@ -50,14 +50,14 @@ public class Main {
             int[] edades = {7, 12, 8, 14, 6, 18, 3, 7};
             double[] precios = {59.99, 39.99, 99.99, 49.99, 59.99, 69.99, 49.99, 26.95};
             String[] imagenes = {
-                "/Images/1.png",
-                "/Images/2.png",
-                "/Images/3.png",
-                "/Images/4.png",
-                "/Images/5.png",
-                "/Images/6.png",
-                "/Images/7.png",
-                "/Images/8.png"
+                "/Images/1.jpeg",
+                "/Images/2.jpeg",
+                "/Images/3.jpeg",
+                "/Images/4.jpeg",
+                "/Images/5.jpeg",
+                "/Images/6.jpeg",
+                "/Images/7.jpeg",
+                "/Images/8.jpg"
             };
             
             boolean necesitaRecrear = false;

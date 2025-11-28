@@ -1,3 +1,9 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package lab_6;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -7,8 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import lab_6.LoginFrame;
-import lab_6.SteamStyle;
 
 public class SteamAdmin extends JFrame implements ActionListener {
     private Steam steam;
@@ -28,14 +32,14 @@ public class SteamAdmin extends JFrame implements ActionListener {
     private JButton logoutButton;
     
     private final String[] availableImages = {
-        "/Images/1.png",
-        "/Images/2.png",
-        "/Images/3.png",
-        "/Images/4.png",
-        "/Images/5.png",
-        "/Images/6.png",
-        "/Images/7.png",
-        "/Images/8.png"
+        "/Images/1.jpeg",
+        "/Images/2.jpeg",
+        "/Images/3.jpeg",
+        "/Images/4.jpeg",
+        "/Images/5.jpeg",
+        "/Images/6.jpeg",
+        "/Images/7.jpeg",
+        "/Images/8.jpg"
     };
     
     public SteamAdmin(Steam steam, Steam.Jugador admin) {
@@ -43,78 +47,109 @@ public class SteamAdmin extends JFrame implements ActionListener {
         this.steam = steam;
         this.currentUser = admin;
         
-        setSize(550, 750);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         getContentPane().setBackground(SteamStyle.STEAM_DARK);
+        
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = 1000;
+        int height = 600;
+        setSize(width, height);
+        setPreferredSize(new Dimension(width, height));
+        setMinimumSize(new Dimension(width, height));
+        setMaximumSize(new Dimension(width, height));
+        setResizable(false);
+        
+        int x = (screenSize.width - width) / 2;
+        int y = (screenSize.height - height) / 2;
+        setLocation(x, y);
         
         JPanel mainPanel = SteamStyle.createSteamPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
         
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setOpaque(false);
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 30, 20));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
         
         JLabel titleLabel = new JLabel("PANEL DE ADMINISTRADOR");
         SteamStyle.styleTitleLabel(titleLabel);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         headerPanel.add(titleLabel, BorderLayout.WEST);
         
-        JLabel userLabel = new JLabel("Usuario: " + admin.username);
+        JLabel userLabel = new JLabel(admin.username);
         userLabel.setForeground(SteamStyle.STEAM_TEXT_DARK);
-        userLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        userLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         headerPanel.add(userLabel, BorderLayout.EAST);
         
         mainPanel.add(headerPanel);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         
         JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new GridLayout(0, 2, 15, 15));
+        buttonsPanel.setLayout(new GridBagLayout());
         buttonsPanel.setOpaque(false);
-        buttonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
+        buttonsPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(12, 12, 12, 12);
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
         
+        gbc.gridx = 0; gbc.gridy = 0;
         addPlayerButton = createStyledButton("Registrar Player");
-        buttonsPanel.add(addPlayerButton);
+        buttonsPanel.add(addPlayerButton, gbc);
         
+        gbc.gridx = 1; gbc.gridy = 0;
         modifyPlayerButton = createStyledButton("Modificar Player");
-        buttonsPanel.add(modifyPlayerButton);
+        buttonsPanel.add(modifyPlayerButton, gbc);
         
+        gbc.gridx = 2; gbc.gridy = 0;
         deletePlayerButton = createStyledButton("Eliminar Player");
-        buttonsPanel.add(deletePlayerButton);
+        buttonsPanel.add(deletePlayerButton, gbc);
         
+        gbc.gridx = 3; gbc.gridy = 0;
         addGameButton = createStyledButton("Registrar Juego");
-        buttonsPanel.add(addGameButton);
+        buttonsPanel.add(addGameButton, gbc);
         
+        gbc.gridx = 0; gbc.gridy = 1;
         modifyGameButton = createStyledButton("Modificar Juego");
-        buttonsPanel.add(modifyGameButton);
+        buttonsPanel.add(modifyGameButton, gbc);
         
+        gbc.gridx = 1; gbc.gridy = 1;
         deleteGameButton = createStyledButton("Eliminar Juego");
-        buttonsPanel.add(deleteGameButton);
+        buttonsPanel.add(deleteGameButton, gbc);
         
+        gbc.gridx = 2; gbc.gridy = 1;
         updatePriceButton = createStyledButton("Cambiar Precio");
-        buttonsPanel.add(updatePriceButton);
+        buttonsPanel.add(updatePriceButton, gbc);
         
+        gbc.gridx = 3; gbc.gridy = 1;
         viewGamesButton = createStyledButton("Ver Lista Juegos");
-        buttonsPanel.add(viewGamesButton);
+        buttonsPanel.add(viewGamesButton, gbc);
         
+        gbc.gridx = 0; gbc.gridy = 2;
         viewReportsButton = createStyledButton("Ver Reportes");
-        buttonsPanel.add(viewReportsButton);
+        buttonsPanel.add(viewReportsButton, gbc);
         
+        gbc.gridx = 1; gbc.gridy = 2;
         generateReportButton = createStyledButton("Generar Reporte");
-        buttonsPanel.add(generateReportButton);
+        buttonsPanel.add(generateReportButton, gbc);
         
+        gbc.gridx = 2; gbc.gridy = 2;
         viewDownloadsButton = createStyledButton("Ver Descargas");
-        buttonsPanel.add(viewDownloadsButton);
+        buttonsPanel.add(viewDownloadsButton, gbc);
         
+        gbc.gridx = 3; gbc.gridy = 2;
         logoutButton = createStyledButton("Cerrar Sesión", true);
-        logoutButton.setBackground(new Color(180, 50, 50));
+        logoutButton.setBackground(SteamStyle.STEAM_RED);
         logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                logoutButton.setBackground(new Color(200, 70, 70));
+                logoutButton.setBackground(new Color(240, 70, 85));
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                logoutButton.setBackground(new Color(180, 50, 50));
+                logoutButton.setBackground(SteamStyle.STEAM_RED);
             }
         });
-        buttonsPanel.add(logoutButton);
+        buttonsPanel.add(logoutButton, gbc);
         
         mainPanel.add(buttonsPanel);
         add(mainPanel);
@@ -126,11 +161,54 @@ public class SteamAdmin extends JFrame implements ActionListener {
     
     private JButton createStyledButton(String text, boolean isLogout) {
         JButton button = new JButton(text);
-        SteamStyle.styleButton(button);
-        button.setPreferredSize(new Dimension(250, 50));
-        button.setMaximumSize(new Dimension(250, 50));
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        
+        Color baseColor = isLogout ? SteamStyle.STEAM_RED : SteamStyle.STEAM_BLUE;
+        Color hoverColor = isLogout ? new Color(240, 70, 85) : SteamStyle.STEAM_LIGHT_BLUE;
+        Color pressColor = isLogout ? new Color(200, 50, 65) : SteamStyle.STEAM_BLUE_DARK;
+        
+        button.setBackground(baseColor);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        button.setFocusPainted(false);
+        button.setBorderPainted(true);
+        button.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 150), 2),
+            BorderFactory.createEmptyBorder(14, 20, 14, 20)
+        ));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setOpaque(true);
+        button.setPreferredSize(new Dimension(240, 70));
+        button.setMaximumSize(new Dimension(240, 70));
+        button.setMinimumSize(new Dimension(240, 70));
         button.addActionListener(this);
+        
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+                button.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(hoverColor.getRed(), hoverColor.getGreen(), hoverColor.getBlue(), 200), 2),
+                    BorderFactory.createEmptyBorder(14, 20, 14, 20)
+                ));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(baseColor);
+                button.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 150), 2),
+                    BorderFactory.createEmptyBorder(14, 20, 14, 20)
+                ));
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                button.setBackground(pressColor);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                if (button.getModel().isRollover()) {
+                    button.setBackground(hoverColor);
+                } else {
+                    button.setBackground(baseColor);
+                }
+            }
+        });
+        
         return button;
     }
     

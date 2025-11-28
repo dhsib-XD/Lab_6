@@ -18,10 +18,10 @@ public class CatalogoJuegos extends JFrame {
     private Steam steam;
     private int currentPlayerCode;
     private JPanel gamePanel;
-    private final Color BACKGROUND_COLOR = new Color(27, 40, 56);
-    private final Color CARD_COLOR = new Color(42, 71, 94);
-    private final Color TEXT_COLOR = new Color(195, 213, 220);
-    private final Color BUTTON_COLOR = new Color(59, 133, 224);
+    private final Color BACKGROUND_COLOR = SteamStyle.STEAM_DARK;
+    private final Color CARD_COLOR = SteamStyle.STEAM_GRAY;
+    private final Color TEXT_COLOR = SteamStyle.STEAM_TEXT;
+    private final Color BUTTON_COLOR = SteamStyle.STEAM_BLUE;
     
     public CatalogoJuegos(Steam steam) {
         this(steam, -1);
@@ -36,25 +36,33 @@ public class CatalogoJuegos extends JFrame {
     
     private void setupFrame() {
         setTitle("Steam - Catálogo de Juegos");
-        setSize(800, 600);
+        setSize(900, 700);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(BACKGROUND_COLOR);
+        JPanel mainPanel = SteamStyle.createSteamPanel();
+        mainPanel.setLayout(new BorderLayout());
         
         JPanel headerPanel = createHeaderPanel();
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         
         gamePanel = new JPanel();
         gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
-        gamePanel.setBackground(BACKGROUND_COLOR);
-        gamePanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        gamePanel.setOpaque(false);
+        gamePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         JScrollPane scrollPane = new JScrollPane(gamePanel);
-        scrollPane.setBackground(BACKGROUND_COLOR);
-        scrollPane.getViewport().setBackground(BACKGROUND_COLOR);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = SteamStyle.STEAM_GRAY;
+                this.trackColor = SteamStyle.STEAM_DARKER;
+            }
+        });
         
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         add(mainPanel);
@@ -62,18 +70,17 @@ public class CatalogoJuegos extends JFrame {
     
     private JPanel createHeaderPanel() {
         JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(new Color(23, 26, 33));
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        headerPanel.setOpaque(false);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
         
         JLabel titleLabel = new JLabel("TIENDA");
-        titleLabel.setForeground(TEXT_COLOR);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setForeground(SteamStyle.STEAM_LIGHT_BLUE);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         headerPanel.add(titleLabel, BorderLayout.WEST);
         
         JButton returnButton = new JButton("Regresar al Menú");
-        returnButton.setBackground(CARD_COLOR);
-        returnButton.setForeground(Color.WHITE);
-        returnButton.setFocusPainted(false);
+        SteamStyle.styleSecondaryButton(returnButton);
+        returnButton.setPreferredSize(new Dimension(160, 38));
         returnButton.addActionListener(e -> dispose());
         headerPanel.add(returnButton, BorderLayout.EAST);
         
@@ -104,10 +111,13 @@ public class CatalogoJuegos extends JFrame {
     }
     
     private void addGameCard(Steam.Juego game) {
-        JPanel cardPanel = new JPanel(new BorderLayout(5, 0));
+        JPanel cardPanel = new JPanel(new BorderLayout(10, 0));
         cardPanel.setBackground(CARD_COLOR);
-        cardPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        cardPanel.setMaximumSize(new Dimension(750, 100));
+        cardPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(60, 80, 100), 1),
+            BorderFactory.createEmptyBorder(12, 12, 12, 12)
+        ));
+        cardPanel.setMaximumSize(new Dimension(850, 110));
         
      
         JLabel imageLabel = createImageLabel(game);
@@ -149,22 +159,22 @@ public class CatalogoJuegos extends JFrame {
         
         
         JLabel nameLabel = new JLabel(game.titulo);
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 17));
         nameLabel.setForeground(TEXT_COLOR);
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         infoPanel.add(nameLabel);
-        infoPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        infoPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         
         String osName = getOSName(game.sistemaOperativo);
         JLabel osLabel = new JLabel("Sistema: " + osName + " | Edad: " + game.edadMinima + "+");
-        osLabel.setForeground(new Color(170, 170, 170));
-        osLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        osLabel.setForeground(SteamStyle.STEAM_TEXT_DARK);
+        osLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         osLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         infoPanel.add(osLabel);
         
         JLabel idLabel = new JLabel("ID: " + game.code);
-        idLabel.setForeground(new Color(120, 120, 120));
-        idLabel.setFont(new Font("Arial", Font.PLAIN, 11));
+        idLabel.setForeground(new Color(100, 120, 140));
+        idLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         idLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         infoPanel.add(idLabel);
         
@@ -187,16 +197,15 @@ public class CatalogoJuegos extends JFrame {
         actionPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
         
         JLabel priceLabel = new JLabel("$" + String.format("%.2f", game.precio));
-        priceLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        priceLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         priceLabel.setForeground(Color.WHITE);
         priceLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         actionPanel.add(priceLabel);
-        actionPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        actionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         
         JButton downloadButton = new JButton("Descargar");
-        downloadButton.setBackground(BUTTON_COLOR);
-        downloadButton.setForeground(Color.WHITE);
-        downloadButton.setFocusPainted(false);
+        SteamStyle.styleButton(downloadButton);
+        downloadButton.setPreferredSize(new Dimension(120, 35));
         downloadButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
         downloadButton.addActionListener(e -> downloadGame(game.code));
         actionPanel.add(downloadButton);
