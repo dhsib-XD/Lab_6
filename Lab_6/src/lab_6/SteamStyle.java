@@ -4,10 +4,15 @@
  */
 package lab_6;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 /**
  *
  * @author mavasquez
  */
 public class SteamStyle {
+
+    
     
 }
